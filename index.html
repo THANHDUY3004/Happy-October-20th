@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Ngày 20-10</title>
+    <!-- Tải Tailwind CSS để thiết kế giao diện -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tải Google Fonts để có font chữ đẹp -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS tùy chỉnh */
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden; /* Ẩn thanh cuộn */
+        }
+
+        .font-dancing-script {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Hiệu ứng cho tiêu đề */
+        .title-animation {
+            animation: fadeInGlow 3s ease-in-out forwards;
+        }
+
+        @keyframes fadeInGlow {
+            0% {
+                opacity: 0;
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0);
+            }
+            50% {
+                opacity: 1;
+                text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            }
+            100% {
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        /* Lớp phủ cho canvas */
+        #falling-flowers-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Đặt canvas phía sau nội dung */
+            pointer-events: none; /* Cho phép click xuyên qua canvas */
+        }
+        
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center min-h-screen text-white p-4">
+
+    <!-- Canvas cho hiệu ứng hoa rơi -->
+    <canvas id="falling-flowers-canvas"></canvas>
+
+    <div class="card w-full max-w-lg text-center p-8 rounded-2xl shadow-2xl border border-white/20">
+        <!-- Tiêu đề chính -->
+        <h1 class="font-dancing-script text-5xl md:text-6xl text-yellow-300 title-animation">
+            Chúc Mừng 20-10
+        </h1>
+        
+        <!-- Dòng chữ phụ -->
+        <p class="mt-4 text-lg md:text-xl font-semibold text-red-100">
+            Ngày Phụ Nữ Việt Nam
+        </p>
+
+        <!-- Ảnh động -->
+        <div class="my-8 flex justify-center">
+            <img 
+                src="https://i.pinimg.com/originals/8a/a8/19/8aa81933e4597b09337f8143a4f6a73c.gif" 
+                alt="Hoa hồng chúc mừng"
+                class="rounded-full w-48 h-48 md:w-56 md:h-56 object-cover border-4 border-white/50 shadow-lg"
+                onerror="this.onerror=null;this.src='https://placehold.co/200x200/FF6347/FFFFFF?text=Hoa%20Hong';"
+            >
+        </div>
+
+        <!-- Lời chúc -->
+        <p class="text-base md:text-lg leading-relaxed text-red-50">
+            Nhân ngày Phụ nữ Việt Nam 20/10, xin gửi những lời chúc nồng nhiệt nhất đến tất cả các chị và các bạn nữ. Chúc phái đẹp của chúng ta luôn xinh đẹp, rạng rỡ, hạnh phúc và thành công trong cuộc sống!
+        </p>
+    </div>
+
+    <script>
+        // JavaScript cho hiệu ứng hoa rơi
+        const canvas = document.getElementById('falling-flowers-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Emoji hình hoa
+        const petals = ['🌸', '🌺', '🌹', '🌷', '💐'];
+        const particles = [];
+        const numberOfParticles = 100;
+
+        function createParticles() {
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height * 2 - canvas.height, // Bắt đầu từ ngoài màn hình
+                    size: Math.random() * 20 + 15,
+                    speed: Math.random() * 2 + 1,
+                    petal: petals[Math.floor(Math.random() * petals.length)],
+                    rotation: Math.random() * 360,
+                    spin: (Math.random() - 0.5) * 0.1
+                });
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.font = `${p.size}px Arial`;
+                ctx.globalAlpha = 0.8;
+                ctx.fillText(p.petal, -p.size/2, p.size/2);
+                ctx.restore();
+            });
+        }
+
+        function updateParticles() {
+            particles.forEach(p => {
+                p.y += p.speed;
+                p.x += Math.sin(p.y / 50) * 0.5; // Tạo hiệu ứng lượn sóng
+                p.rotation += p.spin;
+
+                // Nếu hạt rơi ra khỏi màn hình, tái tạo lại ở trên cùng
+                if (p.y > canvas.height + p.size) {
+                    p.x = Math.random() * canvas.width;
+                    p.y = -p.size;
+                    p.size = Math.random() * 20 + 15;
+                    p.speed = Math.random() * 2 + 1;
+                }
+            });
+        }
+
+        function animate() {
+            drawParticles();
+            updateParticles();
+            requestAnimationFrame(animate);
+        }
+
+        // Xử lý khi thay đổi kích thước cửa sổ
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles.length = 0; // Xóa các hạt cũ
+            createParticles(); // Tạo lại hạt mới
+        });
+
+        // Bắt đầu
+        createParticles();
+        animate();
+    </script>
+
+</body>
+</html>
